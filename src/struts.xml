@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<!-- 常量配置 -->
+	<constant name="struts.action.extension" value="action"/>
+	<!-- struts2文件上传限制2M的问题 ：改为限制大小为10M-->
+	<constant name= "struts.multipart.maxSize" value="10485760" />
+	
+	<package name="crm" extends="struts-default" namespace="/">
+		<!-- 配置拦截器 -->
+		<interceptors>
+			<interceptor name="privilegeInterceptor" class="com.ajth.web.action.interceptor.PrivilegeInterceptor"/>
+		</interceptors>
+		
+		<global-results>
+			<result name="login">/login.jsp</result>
+		</global-results>
+		
+		<!-- 用户 -->
+		<action name="user_*" class="userAction" method="{1}">
+		
+			<result name="save" type="redirect">/success.jsp</result>
+			
+			<result name="toUpdate">/edit.jsp</result>
+			
+			<result name="login">/login.jsp</result>
+			
+			<result name="success" type="redirect">/index.jsp</result>
+			
+			<interceptor-ref name="privilegeInterceptor">
+				<param name="excludeMethods">regist, login</param>
+			</interceptor-ref>
+			<interceptor-ref name="defaultStack"/>
+		</action>
+		
+		<!-- 客户管理 -->
+		<action name="customer_*" class="customerAction" method="{1}">
+		
+			<result name="saveUI">/jsp/customer/add.jsp</result>
+			
+			<result name="findAll">/jsp/customer/list.jsp</result>
+			
+			<result name="save" type="redirectAction">customer_findAll.action</result>
+			
+			<result name="deleteSuccess" type="redirectAction">customer_findAll.action</result>
+			
+			<result name="toUpdate">/jsp/customer/edit.jsp</result>
+			
+			<result name="update" type="redirectAction">customer_findAll.action</result>
+	
+			<!-- 错误信息提示 -->
+			<result name="input">/jsp/customer/add.jsp</result>
+			
+			<interceptor-ref name="privilegeInterceptor"/>
+			
+			<interceptor-ref name="defaultStack">
+				 <!-- 修改允许上传文件的大小(默认值是2M),将fileUpload.maximumSize改为(5242880)  -->  
+				  <param name="fileUpload.maximumSize">10485760</param>  
+				  <!-- 配置允许上床文件的类型，如果有多个用","隔开 -->
+				  <param name="fileUpload.allowedExtensions">.jpg,.png,.gif</param>  
+			</interceptor-ref>
+		</action>
+		
+		<!-- 字典-->
+		<action name="baseDict_*" class="baseDictAction" method="{1}">
+			<interceptor-ref name="privilegeInterceptor"/>
+			<interceptor-ref name="defaultStack"/>
+		</action>
+		
+		<!-- 联系人 -->
+		<action name="linkman_*" class="linkmanAction" method="{1}">
+			<result name="saveUI">/jsp/linkman/add.jsp</result>
+			<result name="save" type="redirectAction">linkman_findAll.action</result>
+			<result name="findAll">/jsp/linkman/list.jsp</result>
+			<result name="toUpdate">/jsp/linkman/edit.jsp</result>
+			<result name="update" type="redirectAction">linkman_findAll.action</result>
+			<result name="delete" type="redirectAction">linkman_findAll.action</result>
+			
+			<interceptor-ref name="privilegeInterceptor"/>
+			<interceptor-ref name="defaultStack"/>
+		</action>
+		
+		<!-- 拜访记录 -->
+		<action name="saleVisit_*" class="saleVisitAction" method="{1}">
+			<result name="saveUI">/jsp/salevisit/add.jsp</result>
+			<result name="save" type="redirectAction">saleVisit_findAll.action</result>
+			<result name="findAll">/jsp/salevisit/list.jsp</result>
+			<result name="toUpdate">/jsp/salevisit/edit.jsp</result>
+			<result name="update" type="redirectAction">saleVisit_findAll.action</result>
+			<result name="delete" type="redirectAction">saleVisit_findAll.action</result>
+			
+			<interceptor-ref name="privilegeInterceptor"/>
+			<interceptor-ref name="defaultStack"/>
+		</action>
+	</package>
+</struts>	
+	
+	
